@@ -37,20 +37,20 @@ type TCPClientHandler struct {
 }
 
 // NewTCPClientHandler allocates a new TCPClientHandler.
-func NewTCPClientHandler(address string, rack int, slot int) *TCPClientHandler {
+func NewTCPClientHandler(address string, rack int, slot int, connect_num int) *TCPClientHandler {
 	h := &TCPClientHandler{}
 	h.Address = address
 	h.Timeout = tcpTimeout
 	h.IdleTimeout = tcpIdleTimeout
-	h.ConnectionType = connectionTypePG // Connect to the PLC as a PG
+	h.ConnectionType = connect_num // Connect to the PLC as a PG
 	remoteTSAP := uint16(h.ConnectionType)<<8 + (uint16(rack) * 0x20) + uint16(slot)
 	h.setConnectionParameters(address, 0x0100, remoteTSAP)
 	return h
 }
 
 //TCPClient creator for a TCP client with address, rack and slot, implement from interface client
-func TCPClient(address string, rack int, slot int) Client {
-	handler := NewTCPClientHandler(address, rack, slot)
+func TCPClient(address string, rack int, slot int, connect_num int) Client {
+	handler := NewTCPClientHandler(address, rack, slot, connect_num)
 	return NewClient(handler)
 }
 
